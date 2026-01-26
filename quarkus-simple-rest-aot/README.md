@@ -4,6 +4,13 @@ This is a very simple REST app that allows to test the Quarkus initialization wi
 
 You can easily generate various profiles by:
 
+- Executing:
+
+```
+echo 1 | sudo tee /proc/sys/kernel/perf_event_paranoid
+echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
+```
+
 - Defining `PATH_TO_ASYNC_PROFILER`: `export PATH_TO_ASYNC_PROFILER=~/Downloads/async-profiler-4.2.1-linux-x64`
 - Choosing a name for your profile: `my-experiment-1`
 - Then calling the various scripts:
