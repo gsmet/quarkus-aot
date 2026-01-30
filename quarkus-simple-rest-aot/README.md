@@ -2,6 +2,9 @@
 
 This is a very simple REST app that allows to test the Quarkus initialization with AOT.
 
+> [!TIP]
+> You need Quarkus `main` branch locally deployed as this project uses `999-SNAPSHOT` and features that are only in `main`.
+
 You can easily generate various profiles by:
 
 - Executing:
