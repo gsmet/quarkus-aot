@@ -19,16 +19,16 @@ if [ -f "$JFR_FILE" ]; then
     exit 1
 fi
 
-./mvnw clean verify -Dquarkus.package.jar.appcds.enabled=true -Dquarkus.package.jar.appcds.use-aot=true -DskipITs=false
+./mvnw clean verify -Dquarkus.package.jar.type=aot-jar -Dquarkus.package.jar.appcds.use-aot=true -DskipITs=false
 
 pushd target
-perf stat -d -- taskset -c 0,2,4,6 ../run.sh java -jar -XX:AOTCache=app.aot -jar code-with-quarkus-1.0.0-SNAPSHOT-runner.jar &> ../${PERFSTATS_FILE} &
+perf stat -d -- taskset -c 0,2,4,6 ../run.sh java -jar -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &> ../${PERFSTATS_FILE} &
 sleep 1
 PID=$(cat pidfile)
 kill $PID
 sleep 5
 
-java -XX:StartFlightRecording=name=recording,filename=../${JFR_FILE},settings=../allocations.jfc -XX:AOTCache=app.aot -jar code-with-quarkus-1.0.0-SNAPSHOT-runner.jar &
+java -XX:StartFlightRecording=name=recording,filename=../${JFR_FILE},settings=../allocations.jfc -XX:AOTCache=quarkus-app/aapp.aot -jar quarkus-app/quarkus-run.jar &
 PID=$!
 sleep 5
 jcmd $PID JFR.stop name="recording"
