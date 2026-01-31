@@ -1,0 +1,53 @@
+/*
+ * Copyright 2022 Topicus Onderwijs Eduarte B.V..
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package nl.topicus.eduarte.model.entities.settings;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+
+/**
+ * Mutatie Blokkadedatum
+ *
+ * Met de blokkadedatum is het mogelijk om mutatie's aan verbintenissen van voor
+ * een bepaalde datum te blokkkeren. Hierbij wordt gekeken naar de begindatum
+ * van de verbintenis. Als deze voor de blokkadedatum ligt is er geen enkele
+ * wijziging aan de verbintenis mogelijk.
+ *
+ */
+@Entity()
+public class MutatieBlokkedatumSetting extends OrganisatieSetting<MutatieBlokkedatumConfiguration> {
+	@Embedded
+	private MutatieBlokkedatumConfiguration value;
+
+	public MutatieBlokkedatumSetting() {
+		value = new MutatieBlokkedatumConfiguration();
+	}
+
+	@Override
+	public String getOmschrijving() {
+		return "Mutatie blokkedatum";
+	}
+
+	@Override
+	public MutatieBlokkedatumConfiguration getValue() {
+		return value;
+	}
+
+	@Override
+	public void setValue(MutatieBlokkedatumConfiguration value) {
+		this.value = value;
+	}
+}

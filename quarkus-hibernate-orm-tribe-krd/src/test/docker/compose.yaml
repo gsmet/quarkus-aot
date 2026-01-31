@@ -1,0 +1,11 @@
+services:
+  db-trike-krd:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: quarkus-tribe-krd
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5433:5432"
