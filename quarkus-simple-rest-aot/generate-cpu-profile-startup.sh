@@ -11,7 +11,8 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-FILE="reports/$1-cpu"
+DATE=$(date +%Y-%m-%d)
+FILE="reports/${DATE}-$1-cpu"
 JFR_FILE="${FILE}.jfr"
 REPORT_FILE="${FILE}.html"
 REPORT_FILE_REVERSE="${FILE}-reverse.html"

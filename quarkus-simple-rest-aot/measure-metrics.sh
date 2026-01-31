@@ -28,7 +28,7 @@ PID=$(cat pidfile)
 kill $PID
 sleep 5
 
-java -XX:StartFlightRecording=name=recording,filename=../${JFR_FILE},settings=../allocations.jfc -XX:AOTCache=quarkus-app/aapp.aot -jar quarkus-app/quarkus-run.jar &
+java -XX:StartFlightRecording=name=recording,filename=../${JFR_FILE},settings=../allocations.jfc -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &
 PID=$!
 sleep 5
 jcmd $PID JFR.stop name="recording"
