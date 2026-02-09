@@ -34,8 +34,8 @@ kill $PID
 sleep 8
 popd
 
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" "${REPORT_FILE}"
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" --reverse "${REPORT_FILE_REVERSE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" --threads --lines "${REPORT_FILE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" --threads --lines --reverse "${REPORT_FILE_REVERSE}"
 
 echo "Profile written to: ${REPORT_FILE}"
 echo "Reverse profile written to: ${REPORT_FILE_REVERSE}"

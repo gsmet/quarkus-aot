@@ -12,7 +12,7 @@ if [ $# -lt 1 ]; then
 fi
 
 DATE=$(date +%Y-%m-%d)
-FILE="reports/${DATE}-$1-wall"
+FILE="reports/${DATE}-$1-cpu"
 JFR_FILE="${FILE}.jfr"
 REPORT_FILE="${FILE}.html"
 REPORT_FILE_REVERSE="${FILE}-reverse.html"
@@ -24,18 +24,22 @@ if [ -f "$REPORT_FILE" ]; then
     exit 1
 fi
 
+export JAVA_OPTS="-Xlog:aot"
+
 ./mvnw clean verify -Dquarkus.package.jar.type=aot-jar -Dquarkus.package.jar.appcds.use-aot=true -DskipITs=false
 
+sleep 2
+
 pushd target
-java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,event=wall,interval=1,timeout=2,simple,file=../$JFR_FILE -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &
+java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,event=cpu,interval=1,timeout=2,simple,file=../$JFR_FILE -XX:CompileThreshold=999999 -XX:Tier3InvocationThreshold=99999 -XX:AOTCache=quarkus-app/app.aot -Xlog:aot -jar quarkus-app/quarkus-run.jar &
 PID=$!
 sleep 5
 kill $PID
 sleep 8
 popd
 
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" --lines "${REPORT_FILE}"
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --wall --lines --exclude "(__syscall_cancel_arch)|(__syscall_cancel_arch_end)|(.*::.*)" --lines --reverse "${REPORT_FILE_REVERSE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --lines "${REPORT_FILE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --lines --reverse "${REPORT_FILE_REVERSE}"
 
 echo "Profile written to: ${REPORT_FILE}"
 echo "Reverse profile written to: ${REPORT_FILE_REVERSE}"

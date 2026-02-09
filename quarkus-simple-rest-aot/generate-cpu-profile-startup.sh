@@ -27,15 +27,15 @@ fi
 ./mvnw clean verify -Dquarkus.package.jar.type=aot-jar -Dquarkus.package.jar.appcds.use-aot=true -DskipITs=false
 
 pushd target
-java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,event=cpu,interval=1,timeout=2,simple,file=../$JFR_FILE -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &
+java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,event=cpu,interval=1,timeout=2,simple,file=../$JFR_FILE -XX:AOTCache=quarkus-app/app.aot -Xlog:aot -jar quarkus-app/quarkus-run.jar &
 PID=$!
 sleep 5
 kill $PID
 sleep 8
 popd
 
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --exclude "(__syscall_cancel_arch)|(.*::.*)" "${REPORT_FILE}"
-"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --exclude "(__syscall_cancel_arch)|(.*::.*)" --reverse "${REPORT_FILE_REVERSE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --exclude "(__syscall_cancel_arch)|(.*::.*)" --lines "${REPORT_FILE}"
+"${PATH_TO_ASYNC_PROFILER}/bin/jfrconv" "$JFR_FILE" --cpu --exclude "(__syscall_cancel_arch)|(.*::.*)" --lines --reverse "${REPORT_FILE_REVERSE}"
 
 echo "Profile written to: ${REPORT_FILE}"
 echo "Reverse profile written to: ${REPORT_FILE_REVERSE}"
