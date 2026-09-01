@@ -28,10 +28,10 @@ if [ -f "$REPORT_FILE" ]; then
     exit 1
 fi
 
-./mvnw clean verify -Dquarkus.package.jar.type=aot-jar -Dquarkus.package.jar.appcds.use-aot=true -DskipITs=false
+./mvnw clean verify -Dquarkus.package.jar.aot.enabled=true -DskipITs=false
 
 pushd target
-java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,alloc=100,total,event=alloc,timeout=2,file=../$JFR_FILE -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &
+java -agentpath:${PATH_TO_ASYNC_PROFILER}/lib/libasyncProfiler.so=start,alloc=100,total,event=alloc,timeout=2,file=../$JFR_FILE -Xlog:aot -XX:AOTCache=quarkus-app/app.aot -jar quarkus-app/quarkus-run.jar &
 PID=$!
 sleep 5
 kill $PID
